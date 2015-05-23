@@ -2,7 +2,7 @@
 "use strict";
 
 function parseTypeComment(s) {
-	const match = s.match(/\/*:(.+)\*\//, "$1");
+	const match = s.match(/\/*:(.+)\*\//);
 	let type;
 	if(match) {
 		type = match[1];
@@ -16,6 +16,8 @@ function parseTypeComment(s) {
 function getTypeStrings(fn) {
 	const source = fn.toString();
 	const argString = source.replace(/function ?\(([^\)]*)\).*/, "$1");
+	const retMatch = source.match(/function ?.*?\)\/\*:(\S+)\*\//);
+
 	let args;
 	if(argString) {
 		args = argString
@@ -25,7 +27,8 @@ function getTypeStrings(fn) {
 	} else {
 		args = [];
 	}
-	const ret = null;
+
+	const ret = retMatch ? retMatch[1] : null;
 	return {args, ret};
 }
 
