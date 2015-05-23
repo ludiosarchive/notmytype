@@ -1,0 +1,29 @@
+{
+  "name": "superfn",
+  "version": "0.1.0",
+  "description": "Type-checks at runtime the inputs and outputs of functions with type annotations",
+  "homepage": "https://github.com/ludios/superfn",
+  "issues": "https://github.com/ludios/superfn/issues",
+  "keywords": [
+    "types",
+    "type-check",
+    "type-checking",
+    "validate",
+    "validation"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha tests/*.js && ./node_modules/.bin/eslint .",
+    "test-strong-mode": "iojs --strong_mode ./node_modules/.bin/_mocha tests/*.js"
+  },
+  "devDependencies": {
+    "eslint": "^0.21.1",
+    "mocha": "^2.2.5"
+  },
+  "author": "Ivan Kozik",
+  "license": "ISC",
+  "repository": "ludios/superfn",
+  "engines": {
+    "iojs": ">= 2.0.0"
+  }
+}
