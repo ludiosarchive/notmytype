@@ -1,6 +1,8 @@
 "use strong";
 "use strict";
 
+const assert = require('assert');
+
 const raw = String.raw;
 const typeRe = new RegExp(raw`/\*\s*:(.+)\*/`);
 
@@ -39,7 +41,7 @@ function getTypeStrings(fn) {
 	if(argString) {
 		args = argString
 			.split(",")
-			.map(function(source) { return source.trim(); })
+			.map(function(fragment) { return fragment.trim(); })
 			.map(parseTypeComment);
 	} else {
 		args = [];
@@ -49,8 +51,29 @@ function getTypeStrings(fn) {
 	return {args, ret};
 }
 
-function T(fn) {
+const ordinals = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth", "Eleventh", "Twelfth"];
 
+function T(fn) {
+	const typeStrings = getTypeStrings(fn);
+	return function(...args) {
+		let count = 0;
+		for(let arg of typeStrings.args) {
+			const argName = arg[0];
+			const argType = arg[1];
+			if(argType === 'string') {
+				if(typeof args[count] !== 'string') {
+					throw new TypeError(
+						`${ordinals[count]} argument "${argName}" must be a ${argType}` +
+						` but was ${typeof args[count]}`
+					);
+				}
+			}
+			count += 1;
+		}
+		const out = fn.apply(this, args);
+		// TODO: check return type
+		return out;
+	};
 }
 
-module.exports = {getTypeStrings};
+module.exports = {getTypeStrings, T};

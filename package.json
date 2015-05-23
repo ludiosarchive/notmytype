@@ -13,7 +13,7 @@
   ],
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha tests/*.js && ./node_modules/.bin/eslint .",
+    "test": "iojs --harmony-rest-parameters ./node_modules/.bin/_mocha tests/*.js && ./node_modules/.bin/eslint .",
     "test-strong-mode": "iojs --strong_mode ./node_modules/.bin/_mocha tests/*.js"
   },
   "devDependencies": {

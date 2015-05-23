@@ -3,7 +3,9 @@
 
 const assert = require('assert');
 
-const getTypeStrings = require('..').getTypeStrings;
+const superfn = require('..');
+const getTypeStrings = superfn.getTypeStrings;
+const T = superfn.T;
 
 describe('getTypeStrings', function() {
 	it('extracts arg list from untyped function', function() {
@@ -72,5 +74,13 @@ describe('getTypeStrings', function() {
 		assert.deepStrictEqual(
 			{args: [['a', 'number'], ['b', 'boolean']], ret: 'string'},
 			getTypeStrings('function name(a /* : number */, b /*\t:\tboolean\t*/)\t\n/*\t\n:\t\nstring\t\n*/\n{ return 3; }'));
+	});
+});
+
+describe('T', function() {
+	it('wraps fn to throw TypeError when invalid argument type is given', function() {
+		const fn = T(function(a/*:string*/, b) { return b; });
+		fn("a", 3);
+		assert.throws(function() { fn(5, 3); }, /must be a string/);
 	});
 });
