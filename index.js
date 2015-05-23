@@ -1,22 +1,39 @@
 "use strong";
 "use strict";
 
+const raw = String.raw;
+const typeRe = new RegExp(raw`/\*\s*:(.+)\*/`);
+
 function parseTypeComment(s) {
-	const match = s.match(/\/*:(.+)\*\//);
+	const match = s.match(typeRe);
+	let varname;
 	let type;
 	if(match) {
-		type = match[1];
-		s = s.split('/')[0];
+		varname = s.split('/')[0].trim();
+		type = match[1].trim();
 	} else {
+		varname = s.trim();
 		type = null;
 	}
-	return [s, type];
+	return [varname, type];
 }
+
+const argRe = new RegExp(
+	raw`function ?` +
+	raw`( [^\(]*)?` + /* function name, if any */
+	raw`\(([^\)]*)\).*` /* match argument list inside function(...) */
+);
+
+const retRe = new RegExp(
+	raw`function ?` +
+	raw`.*?\)\s*` + /* skip over function(...) */
+	raw`/\*\s*:([^\*]+)\*/` /* match return type inside comment */
+);
 
 function getTypeStrings(fn) {
 	const source = fn.toString();
-	const argString = source.replace(/function ?\(([^\)]*)\).*/, "$1");
-	const retMatch = source.match(/function ?.*?\)\/\*:(\S+)\*\//);
+	const argString = source.replace(argRe, "$2");
+	const retMatch = source.match(retRe);
 
 	let args;
 	if(argString) {
@@ -28,7 +45,7 @@ function getTypeStrings(fn) {
 		args = [];
 	}
 
-	const ret = retMatch ? retMatch[1] : null;
+	const ret = retMatch ? retMatch[1].trim() : null;
 	return {args, ret};
 }
 
