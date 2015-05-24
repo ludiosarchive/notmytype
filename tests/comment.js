@@ -3,7 +3,7 @@
 
 const assert = require('assert');
 
-const superfn = require('..');
+const superfn = require('../comment');
 const getTypeStrings = superfn.getTypeStrings;
 const T = superfn.T;
 
