@@ -114,7 +114,9 @@ function list(type/*: Type*/, name/*?: string*/)/*: Type*/ {
 function optional(type/*: Type*/, name/*?: string*/)/*: Type*/ {
 	name = name || `${type.name}?`;
 	return new Type(name, function(x, ctx, failOnFirstError) {
-		if(x === undefined) { return null; }
+		if(x === undefined) {
+			return null;
+		}
 		ctx = ctx || [];
 		ctx.push(name);
 		return validate(x, type, ctx, failOnFirstError);
@@ -124,7 +126,9 @@ function optional(type/*: Type*/, name/*?: string*/)/*: Type*/ {
 function maybe(type/*: Type*/, name/*?: string*/)/*: Type*/ {
 	name = name || `?${type.name}`;
 	return new Type(name, function(x, ctx, failOnFirstError) {
-		if(x === null) { return null; }
+		if(x === null) {
+			return null;
+		}
 		ctx = ctx || [];
 		ctx.push(name);
 		return validate(x, type, ctx, failOnFirstError);
