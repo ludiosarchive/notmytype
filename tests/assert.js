@@ -7,426 +7,435 @@
 
 /* eslint-disable no-shadow */
 
-var tape = require('tape');
+var assert = require('assert');
 var f = require('../assert');
 
-tape('Failure.stringify', function (tape) {
+describe('Failure.stringify', function() {
+	it('should stringify numbers', function() {
+		assert.strictEqual(
+			f.Failure.stringify(1),
+			'1'
+		);
+	});
 
-	tape.plan(7);
+	it('should stringify strings', function() {
+		assert.strictEqual(
+			f.Failure.stringify('a'),
+			'"a"'
+		);
+	});
 
-	tape.strictEqual(
-		f.Failure.stringify(1),
-		'1',
-		'should stringify numbers'
-	);
+	it('should stringify booleans', function() {
+		assert.strictEqual(
+			f.Failure.stringify(true),
+			'true'
+		);
+	});
 
-	tape.strictEqual(
-		f.Failure.stringify('a'),
-		'"a"',
-		'should stringify strings'
-	);
+	it('should stringify objects', function() {
+		assert.strictEqual(
+			f.Failure.stringify({a: 1}),
+			'{\n  "a": 1\n}'
+		);
+	});
 
-	tape.strictEqual(
-		f.Failure.stringify(true),
-		'true',
-		'should stringify booleans'
-	);
+	it('should stringify arrays', function() {
+		assert.strictEqual(
+			f.Failure.stringify([1, 2, 3]),
+			'[\n  1,\n  2,\n  3\n]'
+		);
+	});
 
-	tape.strictEqual(
-		f.Failure.stringify({a: 1}),
-		'{\n  "a": 1\n}',
-		'should stringify objects'
-	);
+	it('should stringify functions', function() {
+		assert.strictEqual(
+			f.Failure.stringify(Date),
+			'"[Date, Function]"'
+		);
+	});
 
-	tape.strictEqual(
-		f.Failure.stringify([1, 2, 3]),
-		'[\n  1,\n  2,\n  3\n]',
-		'should stringify arrays'
-	);
-
-	tape.strictEqual(
-		f.Failure.stringify(Date),
-		'"[Date, Function]"',
-		'should stringify functions'
-	);
-
-	tape.strictEqual(
-		f.Failure.stringify(/^a/),
-		'"[/^a/, RegExp]"',
-		'should stringify regexps'
-	);
-
+	it('should stringify regexps', function() {
+		assert.strictEqual(
+			f.Failure.stringify(/^a/),
+			'"[/^a/, RegExp]"'
+		);
+	});
 });
 
-tape('number', function (tape) {
+describe('number', function() {
+	it('is() should return false if x is not a number', function() {
+		assert.strictEqual(
+			f.number.is('a'),
+			false
+		);
+	});
 
-	tape.plan(5);
+	it('validate() should fail if x is not a number', function() {
+		assert.strictEqual(
+			f.number.validate('a') + '',
+			'Expected an instance of number got "a", (no context)'
+		);
+	});
 
-	tape.strictEqual(
-		f.number.is('a'),
-		false,
-		'is() should return false if x is not a number'
-	);
+	it('validate() should succeed if x is a number', function() {
+		assert.strictEqual(
+			f.number.validate(1),
+			null
+		);
+	});
 
-	tape.strictEqual(
-		f.number.validate('a') + '',
-		'Expected an instance of number got "a", (no context)',
-		'validate() should fail if x is not a number'
-	);
+	it('validate() should succeed if x is a NaN', function() {
+		assert.strictEqual(
+			f.number.validate(NaN),
+			null
+		);
+	});
 
-	tape.strictEqual(
-		f.number.validate(1),
-		null,
-		'validate() should succeed if x is a number'
-	);
-
-	tape.strictEqual(
-		f.number.validate(NaN),
-		null,
-		'validate() should succeed if x is a NaN'
-	);
-
-	tape.strictEqual(
-		f.number.validate(Infinity),
-		null,
-		'validate() should succeed if x is Infinity'
-	);
-
+	it('validate() should succeed if x is Infinity', function() {
+		assert.strictEqual(
+			f.number.validate(Infinity),
+			null
+		);
+	});
 });
 
-tape('list()', function (tape) {
+describe('list()', function() {
+	it('should set a default name', function() {
+		assert.strictEqual(
+			f.list(f.number).name,
+			'Array<number>'
+		);
+	});
 
-	tape.plan(5);
+	it('should set a specified name', function() {
+		assert.strictEqual(
+			f.list(f.number, 'MyList').name,
+			'MyList'
+		);
+	});
 
-	tape.strictEqual(
-		f.list(f.number).name,
-		'Array<number>',
-		'should set a default name'
-	);
+	it('should fail if x is not an array', function() {
+		assert.strictEqual(
+			f.list(f.number).validate(1) + '',
+			'Expected an instance of array got 1, context: Array<number>'
+		);
+	});
 
-	tape.strictEqual(
-		f.list(f.number, 'MyList').name,
-		'MyList',
-		'should set a specified name'
-	);
+	it('should fail if an element of x is not an instance of T', function() {
+		assert.strictEqual(
+			f.list(f.number).validate([1, 's']) + '',
+			'Expected an instance of number got "s", context: Array<number> / 1'
+		);
+	});
 
-	tape.strictEqual(
-		f.list(f.number).validate(1) + '',
-		'Expected an instance of array got 1, context: Array<number>',
-		'should fail if x is not an array'
-	);
-
-	tape.strictEqual(
-		f.list(f.number).validate([1, 's']) + '',
-		'Expected an instance of number got "s", context: Array<number> / 1',
-		'should fail if an element of x is not an instance of T'
-	);
-
-	tape.strictEqual(
-		f.list(f.number).validate([1, 2]),
-		null,
-		'should succeed if x is a list of T'
-	);
-
+	it('should succeed if x is a list of T', function() {
+		assert.strictEqual(
+			f.list(f.number).validate([1, 2]),
+			null
+		);
+	});
 });
 
-tape('optional()', function (tape) {
+describe('optional()', function() {
+	it('should fail if x is not an instance of T', function() {
+		assert.strictEqual(
+			f.optional(f.number).validate('s') + '',
+			'Expected an instance of number got "s", context: number?'
+		);
+	});
 
-	tape.plan(2);
-
-	tape.strictEqual(
-		f.optional(f.number).validate('s') + '',
-		'Expected an instance of number got "s", context: number?',
-		'should fail if x is not an instance of T'
-	);
-
-	tape.strictEqual(
-		f.optional(f.number).validate(undefined),
-		null,
-		'should succeed if x is undefined'
-	);
-
+	it('should succeed if x is undefined', function() {
+		assert.strictEqual(
+			f.optional(f.number).validate(undefined),
+			null
+		);
+	});
 });
 
-tape('maybe()', function (tape) {
+describe('maybe()', function() {
+	it('should set a default name', function() {
+		assert.strictEqual(
+			f.maybe(f.number).name,
+			'?number'
+		);
+	});
 
-	tape.plan(6);
+	it('should set a specified name', function() {
+		assert.strictEqual(
+			f.maybe(f.number, 'MyMaybe').name,
+			'MyMaybe'
+		);
+	});
 
-	tape.strictEqual(
-		f.maybe(f.number).name,
-		'?number',
-		'should set a default name'
-	);
+	it('should fail if x is not an instance of T', function() {
+		assert.strictEqual(
+			f.maybe(f.number).validate('s') + '',
+			'Expected an instance of number got "s", context: ?number'
+		);
+	});
 
-	tape.strictEqual(
-		f.maybe(f.number, 'MyMaybe').name,
-		'MyMaybe',
-		'should set a specified name'
-	);
+	it('should succeed if x is null', function() {
+		assert.strictEqual(
+			f.maybe(f.number).validate(null),
+			null
+		);
+	});
 
-	tape.strictEqual(
-		f.maybe(f.number).validate('s') + '',
-		'Expected an instance of number got "s", context: ?number',
-		'should fail if x is not an instance of T'
-	);
+	it('should fail if x is undefined', function() {
+		assert.strictEqual(
+			f.maybe(f.number).validate(undefined) + '',
+			'Expected an instance of number got undefined, context: ?number'
+		);
+	});
 
-	tape.strictEqual(
-		f.maybe(f.number).validate(null),
-		null,
-		'should succeed if x is null'
-	);
-
-	tape.strictEqual(
-		f.maybe(f.number).validate(undefined) + '',
-		'Expected an instance of number got undefined, context: ?number',
-		'should fail if x is undefined'
-	);
-
-	tape.strictEqual(
-		f.maybe(f.number).validate(1),
-		null,
-		'should succeed if x is an instance of T'
-	);
-
+	it('should succeed if x is an instance of T', function() {
+		assert.strictEqual(
+			f.maybe(f.number).validate(1),
+			null
+		);
+	});
 });
 
-tape('tuple()', function (tape) {
+describe('tuple()', function() {
+	it('should set a default name', function() {
+		assert.strictEqual(
+			f.tuple([f.string, f.number]).name,
+			'[string, number]'
+		);
+	});
 
-	tape.plan(6);
+	it('should set a specified name', function() {
+		assert.strictEqual(
+			f.tuple([f.string, f.number], 'MyTuple').name,
+			'MyTuple'
+		);
+	});
 
-	tape.strictEqual(
-		f.tuple([f.string, f.number]).name,
-		'[string, number]',
-		'should set a default name'
-	);
+	it('should fail if x is not an array', function() {
+		assert.strictEqual(
+			f.tuple([f.string, f.number]).validate(1) + '',
+			'Expected an instance of array got 1, context: [string, number]'
+		);
+	});
 
-	tape.strictEqual(
-		f.tuple([f.string, f.number], 'MyTuple').name,
-		'MyTuple',
-		'should set a specified name'
-	);
+	it('should fail if x is an array with wrong length', function() {
+		assert.strictEqual(
+			f.tuple([f.string, f.number]).validate(['s']) + '',
+			'Expected an instance of [string, number] got [\n  "s"\n], (no context)'
+		);
+	});
 
-	tape.strictEqual(
-		f.tuple([f.string, f.number]).validate(1) + '',
-		'Expected an instance of array got 1, context: [string, number]',
-		'should fail if x is not an array'
-	);
+	it('should fail if the i-th coordinate of x is not an instance of T[i]', function() {
+		assert.strictEqual(
+			f.tuple([f.string, f.number]).validate([1, 2]) + '',
+			'Expected an instance of string got 1, context: [string, number] / 0'
+		);
+	});
 
-	tape.strictEqual(
-		f.tuple([f.string, f.number]).validate(['s']) + '',
-		'Expected an instance of [string, number] got [\n  "s"\n], (no context)',
-		'should fail if x is an array with wrong length'
-	);
-
-	tape.strictEqual(
-		f.tuple([f.string, f.number]).validate([1, 2]) + '',
-		'Expected an instance of string got 1, context: [string, number] / 0',
-		'should fail if the i-th coordinate of x is not an instance of T[i]'
-	);
-
-	tape.strictEqual(
-		f.tuple([f.string, f.number]).validate(['s', 1]),
-		null,
-		'should succeed if x is an instance of T'
-	);
-
+	it('should succeed if x is an instance of T', function() {
+		assert.strictEqual(
+			f.tuple([f.string, f.number]).validate(['s', 1]),
+			null
+		);
+	});
 });
 
-tape('dict()', function (tape) {
+describe('dict()', function() {
+	it('should set a default name', function() {
+		assert.strictEqual(
+			f.dict(f.string, f.number).name,
+			'{[key: string]: number}'
+		);
+	});
 
-	tape.plan(5);
+	it('should set a specified name', function() {
+		assert.strictEqual(
+			f.dict(f.string, f.number, 'MyDict').name,
+			'MyDict'
+		);
+	});
 
-	tape.strictEqual(
-		f.dict(f.string, f.number).name,
-		'{[key: string]: number}',
-		'should set a default name'
-	);
+	it('should fail if x is not an object', function() {
+		assert.strictEqual(
+			f.dict(f.string, f.number).validate(1) + '',
+			'Expected an instance of object got 1, context: {[key: string]: number}'
+		);
+	});
 
-	tape.strictEqual(
-		f.dict(f.string, f.number, 'MyDict').name,
-		'MyDict',
-		'should set a specified name'
-	);
-
-	tape.strictEqual(
-		f.dict(f.string, f.number).validate(1) + '',
-		'Expected an instance of object got 1, context: {[key: string]: number}',
-		'should fail if x is not an object'
-	);
 
 	/* FIXME
-	tape.strictEqual(
-		f.dict(f.string, f.number).validate({}) + '',
-		'',
-		'should fail if a key of x is not an instance of domain'
-	);
+	it('should fail if a key of x is not an instance of domain', function() {
+		assert.strictEqual(
+			f.dict(f.string, f.number).validate({}) + '',
+			''
+		);
+	});
 	*/
 
-	tape.strictEqual(
-		f.dict(f.string, f.number).validate({a: 's'}) + '',
-		'Expected an instance of number got "s", context: {[key: string]: number} / a',
-		'should fail if a value of x is not an instance of codomain'
-	);
+	it('should fail if a value of x is not an instance of codomain', function() {
+		assert.strictEqual(
+			f.dict(f.string, f.number).validate({a: 's'}) + '',
+			'Expected an instance of number got "s", context: {[key: string]: number} / a'
+		);
+	});
 
-	tape.strictEqual(
-		f.dict(f.string, f.number).validate({a: 1, b: 2}),
-		null,
-		'should succeed if x is an instance of T'
-	);
-
-});
-
-tape('shape()', function (tape) {
-
-	tape.plan(7);
-
-	tape.strictEqual(
-		f.shape({a: f.number, b: f.string}).name,
-		'{a: number; b: string;}',
-		'should set a default name'
-	);
-
-	tape.strictEqual(
-		f.shape({a: f.number, b: f.string}, 'MyObject').name,
-		'MyObject',
-		'should set a specified name'
-	);
-
-	tape.strictEqual(
-		f.shape({a: f.number, b: f.string}).validate(1) + '',
-		'Expected an instance of object got 1, context: {a: number; b: string;}',
-		'should fail if x is not an object'
-	);
-
-	tape.strictEqual(
-		f.shape({a: f.number, b: f.string}).validate({a: 1, b: 2}) + '',
-		'Expected an instance of string got 2, context: {a: number; b: string;} / b',
-		'should fail if a key k of x is not an instance of T[k]'
-	);
-
-	tape.strictEqual(
-		f.shape({a: f.maybe(f.number)}).validate({}) + '',
-		'Expected an instance of number got undefined, context: {a: ?number;} / a / ?number',
-		'should fail if a key is not specified'
-	);
-
-	tape.strictEqual(
-		f.shape({a: f.number, b: f.string}).validate({a: 1, b: 's'}),
-		null,
-		'should succeed if x is an instance of T'
-	);
-
-	tape.strictEqual(
-		f.shape({a: f.number}).validate({a: 1, b: 's'}),
-		null,
-		'should succeed if x owns an additional property'
-	);
+	it('should succeed if x is an instance of T', function() {
+		assert.strictEqual(
+			f.dict(f.string, f.number).validate({a: 1, b: 2}),
+			null
+		);
+	});
 
 });
 
-tape('union()', function (tape) {
+describe('shape()', function() {
+	it('should set a default name', function() {
+		assert.strictEqual(
+			f.shape({a: f.number, b: f.string}).name,
+			'{a: number; b: string;}'
+		);
+	});
 
-	tape.plan(4);
+	it('should set a specified name', function() {
+		assert.strictEqual(
+			f.shape({a: f.number, b: f.string}, 'MyObject').name,
+			'MyObject'
+		);
+	});
 
-	tape.strictEqual(
-		f.union([f.string, f.number]).name,
-		'string | number',
-		'should set a default name'
-	);
+	it('should fail if x is not an object', function() {
+		assert.strictEqual(
+			f.shape({a: f.number, b: f.string}).validate(1) + '',
+			'Expected an instance of object got 1, context: {a: number; b: string;}'
+		);
+	});
 
-	tape.strictEqual(
-		f.union([f.string, f.number], 'MyUnion').name,
-		'MyUnion',
-		'should set a specified name'
-	);
+	it('should fail if a key k of x is not an instance of T[k]', function() {
+		assert.strictEqual(
+			f.shape({a: f.number, b: f.string}).validate({a: 1, b: 2}) + '',
+			'Expected an instance of string got 2, context: {a: number; b: string;} / b'
+		);
+	});
 
-	tape.strictEqual(
-		f.union([f.string, f.number]).validate(false) + '',
-		'Expected an instance of string | number got false, context: string | number',
-		'should fail if x is not an instance of T'
-	);
+	it('should fail if a key is not specified', function() {
+		assert.strictEqual(
+			f.shape({a: f.maybe(f.number)}).validate({}) + '',
+			'Expected an instance of number got undefined, context: {a: ?number;} / a / ?number'
+		);
+	});
 
-	tape.strictEqual(
-		f.union([f.string, f.number]).validate(1),
-		null,
-		'should succeed if x is an instance of T'
-	);
+	it('should succeed if x is an instance of T', function() {
+		assert.strictEqual(
+			f.shape({a: f.number, b: f.string}).validate({a: 1, b: 's'}),
+			null
+		);
+	});
+
+	it('should succeed if x owns an additional property', function() {
+		assert.strictEqual(
+			f.shape({a: f.number}).validate({a: 1, b: 's'}),
+			null
+		);
+	});
 
 });
 
-tape('arguments()', function (tape) {
+describe('union()', function() {
+	it('should set a default name', function() {
+		assert.strictEqual(
+			f.union([f.string, f.number]).name,
+			'string | number'
+		);
+	});
 
-	tape.plan(6);
+	it('should set a specified name', function() {
+		assert.strictEqual(
+			f.union([f.string, f.number], 'MyUnion').name,
+			'MyUnion'
+		);
+	});
 
-	tape.strictEqual(
-		f.arguments([f.number, f.string]).name,
-		'(number, string, ...any)',
-		'should set a proper name when varargs is not specified'
-	);
+	it('should fail if x is not an instance of T', function() {
+		assert.strictEqual(
+			f.union([f.string, f.number]).validate(false) + '',
+			'Expected an instance of string | number got false, context: string | number'
+		);
+	});
 
-	tape.strictEqual(
-		f.arguments([f.number, f.string], f.boolean).name,
-		'(number, string, ...boolean)',
-		'should set a proper name when varargs is specified'
-	);
+	it('should succeed if x is an instance of T', function() {
+		assert.strictEqual(
+			f.union([f.string, f.number]).validate(1),
+			null
+		);
+	});
 
-	tape.test('should fail if x is not an instance of the arguments tuple', function (tape) {
+});
 
-		tape.plan(3);
+describe('arguments()', function() {
+	it('should set a proper name when varargs is not specified', function() {
+		assert.strictEqual(
+			f.arguments([f.number, f.string]).name,
+			'(number, string, ...any)'
+		);
+	});
 
-		tape.strictEqual(
+	it('should set a proper name when varargs is specified', function() {
+		assert.strictEqual(
+			f.arguments([f.number, f.string], f.boolean).name,
+			'(number, string, ...boolean)'
+		);
+	});
+
+	it('should fail if x is not an instance of the arguments tuple', function() {
+
+		assert.strictEqual(
 			f.arguments([f.string, f.number]).validate(1) + '',
 			'Expected an instance of array got 1, context: arguments / [string, number]'
 		);
 
-		tape.strictEqual(
+		assert.strictEqual(
 			f.arguments([f.string, f.number]).validate([]) + '',
 			'Expected an instance of string got undefined, context: arguments / [string, number] / 0,Expected an instance of number got undefined, context: arguments / [string, number] / 1'
 		);
 
-		tape.strictEqual(
+		assert.strictEqual(
 			f.arguments([f.string, f.number]).validate(['a']) + '',
 			'Expected an instance of number got undefined, context: arguments / [string, number] / 1'
 		);
-
 	});
 
-	tape.test('should succeed if x is an instance of the arguments tuple', function (tape) {
-
-		tape.plan(4);
-
-		tape.strictEqual(
+	it('should succeed if x is an instance of the arguments tuple', function() {
+		assert.strictEqual(
 			f.arguments([f.string, f.number]).validate(['s', 1]),
 			null
 		);
 
-		tape.strictEqual(
+		assert.strictEqual(
 			f.arguments([f.string, f.number]).validate(['s', 1, 2]),
 			null
 		);
 
-		tape.strictEqual(
+		assert.strictEqual(
 			f.arguments([f.optional(f.number)]).validate([undefined]),
 			null
 		);
 
-		tape.strictEqual(
+		assert.strictEqual(
 			f.arguments([f.optional(f.number)]).validate([]),
 			null
 		);
-
 	});
 
-	tape.strictEqual(
-		f.arguments([], f.string).validate([1]) + '',
-		'Expected an instance of string got 1, context: varargs / Array<string> / 0',
-		'should fail if x is not an instance of the varargs list'
-	);
+	it('should fail if x is not an instance of the varargs list', function() {
+		assert.strictEqual(
+			f.arguments([], f.string).validate([1]) + '',
+			'Expected an instance of string got 1, context: varargs / Array<string> / 0'
+		);
+	});
 
-	tape.strictEqual(
-		f.arguments([], f.string).validate(['a', 'b']),
-		null,
-		'should succeed if x is an instance of the varargs list'
-	);
-
+	it('should succeed if x is an instance of the varargs list', function() {
+		assert.strictEqual(
+			f.arguments([], f.string).validate(['a', 'b']),
+			null
+		);
+	});
 });
