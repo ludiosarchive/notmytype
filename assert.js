@@ -55,7 +55,7 @@ class Type {
 }
 
 function define(name/*: string*/, is/*: Predicate*/)/*: Type*/ {
-	const type/*: Type*/ = new Type(name, function(x, ctx) {
+	const type = new Type(name, function(x, ctx) {
 		return is(x) ? null : [new Failure(x, type, ctx)];
 	});
 	return type;
@@ -138,7 +138,7 @@ function getName(type/*: Type*/)/*: string*/ {
 function tuple(types/*: Array<Type>*/, name/*?: string*/)/*: Type*/ {
 	name = name || `[${types.map(getName).join(', ')}]`;
 	const dimension = types.length;
-	const type/*: Type*/ = new Type(name, function (x, ctx, failOnFirstError) {
+	const type = new Type(name, function (x, ctx, failOnFirstError) {
 		ctx = ctx || [];
 		// if x is not an array, fail fast
 		if(!Arr.is(x)) { return [new Failure(x, Arr, ctx.concat(name))]; }
@@ -227,7 +227,7 @@ function shape(props/*: {[key: string]: Type;}*/, name/*?: string*/)/*: Type*/ {
 
 function union(types/*: Array<Type>*/, name/*?: string*/)/*: Type*/ {
 	name = name || types.map(getName).join(' | ');
-	const type/*: Type*/ = new Type(name, function(x, ctx) {
+	const type = new Type(name, function(x, ctx) {
 		if(types.some(function(type) { return type.is(x); })) {
 			return null;
 		}
