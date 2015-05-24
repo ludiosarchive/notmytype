@@ -3,7 +3,8 @@
  * Types were changed to superfn comment style
  */
 
-'use strict';
+"use strong";
+"use strict";
 
 /*
 type ValidationContext = Array<string | number>;

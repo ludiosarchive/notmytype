@@ -45,7 +45,10 @@
 		"no-new": 0,
 
 		/* For our T() */
-		"new-cap": 0
+		"new-cap": 0,
+
+		/* Our types go inside comments and thus we have 'whitespace' before semicolons */
+		"semi-spacing": 0
 	},
 	"env": {
 		"es6": true,
