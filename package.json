@@ -14,7 +14,7 @@
   "main": "index.js",
   "scripts": {
     "test": "iojs --harmony-rest-parameters ./node_modules/.bin/_mocha tests/*.js && ./node_modules/.bin/eslint .",
-    "test-strong-mode": "iojs --strong_mode ./node_modules/.bin/_mocha tests/*.js"
+    "test-strong-mode": "iojs --harmony-rest-parameters --strong_mode ./node_modules/.bin/_mocha tests/*.js"
   },
   "devDependencies": {
     "eslint": "^0.21.1",

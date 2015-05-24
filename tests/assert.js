@@ -7,8 +7,8 @@
 
 /* eslint-disable no-shadow */
 
-var assert = require('assert');
-var f = require('../assert');
+const assert = require('assert');
+const f = require('../assert');
 
 describe('Failure.stringify', function() {
 	it('should stringify numbers', function() {

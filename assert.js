@@ -24,7 +24,7 @@ class Failure {
 	}
 
 	toString()/*: string*/ {
-		var ctx = this.ctx ? this.ctx.join(' / ') : '';
+		let ctx = this.ctx ? this.ctx.join(' / ') : '';
 		ctx = ctx ? `, context: ${ctx}` : ', (no context)';
 		return `Expected an instance of ${this.expected.name} got ${Failure.stringify(this.actual) + ctx}`;
 	}
@@ -32,8 +32,8 @@ class Failure {
 	static stringify(x/*: any*/)/*: string*/ {
 		try { // handle circular references
 			return JSON.stringify(x, function(k, v) {
-				if (typeof v === 'function') { return `[${getFunctionName(v)}, Function]`; } // handle functions
-				if (v instanceof RegExp) { return `[${String(v)}, RegExp]`; } // handle regexps
+				if(typeof v === 'function') { return `[${getFunctionName(v)}, Function]`; } // handle functions
+				if(v instanceof RegExp) { return `[${String(v)}, RegExp]`; } // handle regexps
 				return v;
 			}, 2);
 		} catch (e) {
@@ -55,32 +55,32 @@ class Type {
 }
 
 function define(name/*: string*/, is/*: Predicate*/)/*: Type*/ {
-	var type/*: Type*/ = new Type(name, function(x, ctx) {
+	const type/*: Type*/ = new Type(name, function(x, ctx) {
 		return is(x) ? null : [new Failure(x, type, ctx)];
 	});
 	return type;
 }
 
-var Any = define('any', function() { return true; });
+const Any = define('any', function() { return true; });
 
-var Mixed = define('mixed', function() { return true; });
+const Mixed = define('mixed', function() { return true; });
 
-var Void = define('void', function(x) { return x === void 0; });
+const Void = define('void', function(x) { return x === void 0; });
 
-var Str = define('string', function(x) { return typeof x === 'string'; });
+const Str = define('string', function(x) { return typeof x === 'string'; });
 
-var Num = define('number', function(x) { return typeof x === 'number'; });
+const Num = define('number', function(x) { return typeof x === 'number'; });
 
-var Bool = define('boolean', function(x) { return x === true || x === false; });
+const Bool = define('boolean', function(x) { return x === true || x === false; });
 
-var Arr = define('array', function(x) { return x instanceof Array; });
+const Arr = define('array', function(x) { return x instanceof Array; });
 
-var Obj = define('object', function(x) { return x !== null && x !== undefined && typeof x === 'object' && !Arr.is(x); });
+const Obj = define('object', function(x) { return x !== null && x !== undefined && typeof x === 'object' && !Arr.is(x); });
 
-var Func = define('function', function(x) { return typeof x === 'function'; });
+const Func = define('function', function(x) { return typeof x === 'function'; });
 
 function validate(x/*: any*/, type/*: any*/, ctx/*?: ?ValidationContext*/, failOnFirstError/*?: boolean*/) {
-	if (type.validate) {
+	if(type.validate) {
 		return type.validate(x, ctx, failOnFirstError);
 	}
 	return x instanceof type ? null : [new Failure(x, type, ctx)];
@@ -92,14 +92,15 @@ function list(type/*: Type*/, name/*?: string*/)/*: Type*/ {
 		ctx = ctx || [];
 		ctx.push(name);
 		// if x is not an array, fail fast
-		if (!Arr.is(x)) {
+		if(!Arr.is(x)) {
 			return [new Failure(x, Arr, ctx)];
 		}
-		var errors/*: ?Array<Failure>*/ = null, suberrors/*: ?Array<Failure>*/;
-		for (var i = 0, len = x.length ; i < len ; i++ ) {
+		let errors/*: ?Array<Failure>*/ = null;
+		let suberrors/*: ?Array<Failure>*/;
+		for(let i=0, len = x.length; i < len; i++) {
 			suberrors = validate(x[i], type, ctx.concat(i));
-			if (suberrors) {
-				if (failOnFirstError) {
+			if(suberrors) {
+				if(failOnFirstError) {
 					return suberrors;
 				}
 				errors = errors || [];
@@ -113,7 +114,7 @@ function list(type/*: Type*/, name/*?: string*/)/*: Type*/ {
 function optional(type/*: Type*/, name/*?: string*/)/*: Type*/ {
 	name = name || `${type.name}?`;
 	return new Type(name, function(x, ctx, failOnFirstError) {
-		if (x === void 0) { return null; }
+		if(x === void 0) { return null; }
 		ctx = ctx || [];
 		ctx.push(name);
 		return validate(x, type, ctx, failOnFirstError);
@@ -123,7 +124,7 @@ function optional(type/*: Type*/, name/*?: string*/)/*: Type*/ {
 function maybe(type/*: Type*/, name/*?: string*/)/*: Type*/ {
 	name = name || `?${type.name}`;
 	return new Type(name, function(x, ctx, failOnFirstError) {
-		if (x === null) { return null; }
+		if(x === null) { return null; }
 		ctx = ctx || [];
 		ctx.push(name);
 		return validate(x, type, ctx, failOnFirstError);
@@ -136,20 +137,21 @@ function getName(type/*: Type*/)/*: string*/ {
 
 function tuple(types/*: Array<Type>*/, name/*?: string*/)/*: Type*/ {
 	name = name || `[${types.map(getName).join(', ')}]`;
-	var dimension = types.length;
-	var type/*: Type*/ = new Type(name, function (x, ctx, failOnFirstError) {
+	const dimension = types.length;
+	const type/*: Type*/ = new Type(name, function (x, ctx, failOnFirstError) {
 		ctx = ctx || [];
 		// if x is not an array, fail fast
-		if (!Arr.is(x)) { return [new Failure(x, Arr, ctx.concat(name))]; }
+		if(!Arr.is(x)) { return [new Failure(x, Arr, ctx.concat(name))]; }
 		// if x has a wrong length, fail failOnFirstError
-		if (x.length !== dimension) {
+		if(x.length !== dimension) {
 			return [new Failure(x, type, ctx)];
 		}
-		var errors/*: ?Array<Failure>*/ = null, suberrors/*: ?Array<Failure>*/;
-		for(var i = 0; i < dimension; i++) {
+		let errors/*: ?Array<Failure>*/ = null;
+		let suberrors/*: ?Array<Failure>*/;
+		for(let i=0; i < dimension; i++) {
 			suberrors = validate(x[i], types[i], ctx.concat(name, i));
-			if (suberrors) {
-				if (failOnFirstError) {
+			if(suberrors) {
+				if(failOnFirstError) {
 					return suberrors;
 				}
 				errors = errors || [];
@@ -166,14 +168,17 @@ function dict(domain/*: Type*/, codomain/*: Type*/, name/*?: string*/)/*: Type*/
 	return new Type(name, function(x, ctx, failOnFirstError) {
 		ctx = ctx || [];
 		// if x is not an object, fail fast
-		if (!Obj.is(x)) { return [new Failure(x, Obj, ctx.concat(name))]; }
-		var errors/*: ?Array<Failure>*/ = null, suberrors/*: ?Array<Failure>*/;
-		for (var k in x) {
-			if (x.hasOwnProperty(k)) {
+		if(!Obj.is(x)) {
+			return [new Failure(x, Obj, ctx.concat(name))];
+		}
+		let errors/*: ?Array<Failure>*/ = null;
+		let suberrors/*: ?Array<Failure>*/;
+		for(const k of Object.keys(x)) {
+			if(x.hasOwnProperty(k)) {
 				// check domain
 				suberrors = validate(k, domain, ctx.concat(name, k));
-				if (suberrors) {
-					if (failOnFirstError) {
+				if(suberrors) {
+					if(failOnFirstError) {
 						return suberrors;
 					}
 					errors = errors || [];
@@ -181,8 +186,8 @@ function dict(domain/*: Type*/, codomain/*: Type*/, name/*?: string*/)/*: Type*/
 				}
 				// check codomain
 				suberrors = validate(x[k], codomain, ctx.concat(name, k));
-				if (suberrors) {
-					if (failOnFirstError) {
+				if(suberrors) {
+					if(failOnFirstError) {
 						return suberrors;
 					}
 					errors = errors || [];
@@ -199,15 +204,16 @@ function shape(props/*: {[key: string]: Type;}*/, name/*?: string*/)/*: Type*/ {
 	return new Type(name, function(x, ctx, failOnFirstError) {
 		ctx = ctx || [];
 		// if x is not an object, fail fast
-		if (!Obj.is(x)) {
+		if(!Obj.is(x)) {
 			return [new Failure(x, Obj, ctx.concat(name))];
 		}
-		var errors/*: ?Array<Failure>*/ = null, suberrors/*: ?Array<Failure>*/;
-		for (var k in props) {
-			if (props.hasOwnProperty(k)) {
+		let errors/*: ?Array<Failure>*/ = null;
+		let suberrors/*: ?Array<Failure>*/;
+		for(const k of Object.keys(props)) {
+			if(props.hasOwnProperty(k)) {
 				suberrors = validate(x[k], props[k], ctx.concat(name, k));
-				if (suberrors) {
-					if (failOnFirstError) {
+				if(suberrors) {
+					if(failOnFirstError) {
 						return suberrors;
 					}
 					errors = errors || [];
@@ -221,8 +227,8 @@ function shape(props/*: {[key: string]: Type;}*/, name/*?: string*/)/*: Type*/ {
 
 function union(types/*: Array<Type>*/, name/*?: string*/)/*: Type*/ {
 	name = name || types.map(getName).join(' | ');
-	var type/*: Type*/ = new Type(name, function(x, ctx) {
-		if (types.some(function(type) { return type.is(x); })) {
+	const type/*: Type*/ = new Type(name, function(x, ctx) {
+		if(types.some(function(type) { return type.is(x); })) {
 			return null;
 		}
 		ctx = ctx || [];
@@ -236,36 +242,37 @@ function slice/*<T>*/(arr/*: Array<T>*/, start/*?: number*/, end/*?: number*/)/*
 }
 
 function args(types/*: Array<Type>*/, varargs/*?: Type*/)/*: Type*/ {
-	var name = `(${types.map(getName).join(', ')}, ...${(varargs || Any).name})`;
-	var length = types.length;
-	var typesTuple = tuple(types);
-	if (varargs) {
+	const name = `(${types.map(getName).join(', ')}, ...${(varargs || Any).name})`;
+	const length = types.length;
+	const typesTuple = tuple(types);
+	if(varargs) {
 		varargs = list(varargs);
 	}
 	return new Type(name, function(x, ctx, failOnFirstError) {
 		ctx = ctx || [];
-		var args = x;
+		let args = x;
 		// test if args is an array-like structure
-		if (args.hasOwnProperty('length')) {
+		if(args.hasOwnProperty('length')) {
 			args = slice(args, 0, length);
 			// handle optional arguments filling the array with undefined values
-			if (args.length < length) {
+			if(args.length < length) {
 				args.length = length;
 			}
 		}
-		var errors/*: ?Array<Failure>*/ = null, suberrors/*: ?Array<Failure>*/;
+		let errors/*: ?Array<Failure>*/ = null;
+		let suberrors/*: ?Array<Failure>*/;
 		suberrors = typesTuple.validate(args, ctx.concat('arguments'), failOnFirstError);
-		if (suberrors) {
-			if (failOnFirstError) {
+		if(suberrors) {
+			if(failOnFirstError) {
 				return suberrors;
 			}
 			errors = errors || [];
 			errors.push.apply(errors, suberrors);
 		}
-		if (varargs) {
+		if(varargs) {
 			suberrors = varargs.validate(slice(x, length), ctx.concat('varargs'), failOnFirstError);
-			if (suberrors) {
-				if (failOnFirstError) {
+			if(suberrors) {
+				if(failOnFirstError) {
 					return suberrors;
 				}
 				errors = errors || [];
@@ -277,9 +284,9 @@ function args(types/*: Array<Type>*/, varargs/*?: Type*/)/*: Type*/ {
 }
 
 function check/*<T>*/(x/*: T*/, type/*: Type*/)/*: T*/ {
-	var errors = validate(x, type);
-	if (errors) {
-		var message = [].concat(errors).join('\n');
+	const errors = validate(x, type);
+	if(errors) {
+		const message = [].concat(errors).join('\n');
 		throw new TypeError(message);
 	}
 	return x;
