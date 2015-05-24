@@ -1,5 +1,6 @@
 /**
  * Copied from https://github.com/gcanti/flowcheck/blob/d442fd50ae46df620e1391d57b574eda73384626/test/assert.js
+ * Converted to mocha-style tests
  */
 
 "use strong";

@@ -65,7 +65,7 @@ const Any = define('any', function() { return true; });
 
 const Mixed = define('mixed', function() { return true; });
 
-const Void = define('void', function(x) { return x === void 0; });
+const Void = define('void', function(x) { return x === undefined; });
 
 const Str = define('string', function(x) { return typeof x === 'string'; });
 
@@ -114,7 +114,7 @@ function list(type/*: Type*/, name/*?: string*/)/*: Type*/ {
 function optional(type/*: Type*/, name/*?: string*/)/*: Type*/ {
 	name = name || `${type.name}?`;
 	return new Type(name, function(x, ctx, failOnFirstError) {
-		if(x === void 0) { return null; }
+		if(x === undefined) { return null; }
 		ctx = ctx || [];
 		ctx.push(name);
 		return validate(x, type, ctx, failOnFirstError);
