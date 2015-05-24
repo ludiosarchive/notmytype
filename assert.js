@@ -36,8 +36,9 @@ class Failure {
 				if (v instanceof RegExp) { return `[${String(v)}, RegExp]`; } // handle regexps
 				return v;
 			}, 2);
-		} catch (e) {}
-		return String(x);
+		} catch (e) {
+			return String(x);
+		}
 	}
 }
 

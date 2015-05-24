@@ -1,8 +1,6 @@
 "use strong";
 "use strict";
 
-const assert = require('assert');
-
 const raw = String.raw;
 const typeRe = new RegExp(raw`/\*\s*:(.+)\*/`);
 
