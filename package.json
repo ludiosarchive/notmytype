@@ -8,6 +8,7 @@
     "types",
     "type-check",
     "type-checking",
+    "assert",
     "validate",
     "validation"
   ],
