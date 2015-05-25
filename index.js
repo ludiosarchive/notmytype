@@ -3,14 +3,19 @@
 
 const assert = require('./assert');
 
-const ordinals = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth", "Eleventh", "Twelfth"];
+const ordinals = [
+	"First", "Second", "Third", "Fourth", "Fifth", "Sixth",
+	"Seventh", "Eighth", "Ninth", "Tenth", "Eleventh", "Twelfth"
+];
 
 /**
  * Use like T(var1, T.number, var2, T.optional(T.string));
  */
 function T(...args) {
 	if(args.length % 2 !== 0) {
-		throw new TypeError(`T(...) requires an even number of arguments; got ${args.length}`);
+		throw new TypeError(
+			`T(...) requires an even number of arguments; got ${args.length}`
+		);
 	}
 	for(let i=0; i < args.length; i+=2) {
 		const val = args[i];
