@@ -4,9 +4,19 @@
 const assert = require('./assert');
 
 const ordinals = [
-	"First", "Second", "Third", "Fourth", "Fifth", "Sixth",
-	"Seventh", "Eighth", "Ninth", "Tenth", "Eleventh", "Twelfth"
+	"first", "second", "third", "fourth", "fifth", "sixth",
+	"seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth"
 ];
+
+function ordinalize(idx, noun) {
+	return ordinals[idx] ?
+		`${ordinals[idx]} ${noun}` :
+		`${noun} #${idx + 1}`;
+}
+
+function capitalize(s) {
+	return s[0].toUpperCase() + s.slice(1);
+}
 
 /**
  * Use like T(var1, T.number, var2, T.optional(T.string));
@@ -23,7 +33,7 @@ function T(...args) {
 		const errors = assert.validate(val, asserter);
 		if(errors) {
 			const message = [].concat(errors).join('\n');
-			throw new TypeError(`${ordinals[i/2]} object: ${message}`);
+			throw new TypeError(`${capitalize(ordinalize(i/2, "object"))}: ${message}`);
 		}
 	}
 }
