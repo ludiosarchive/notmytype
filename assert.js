@@ -26,7 +26,7 @@ class Failure {
 	toString()/*: string*/ {
 		let ctx = this.ctx ? this.ctx.join(' / ') : '';
 		ctx = ctx ? `, context: ${ctx}` : ', (no context)';
-		return `Expected an instance of ${this.expected.name} got ${Failure.stringify(this.actual) + ctx}`;
+		return `Expected an instance of ${this.expected.name}; got ${Failure.stringify(this.actual) + ctx}`;
 	}
 
 	static stringify(x/*: any*/)/*: string*/ {
@@ -316,5 +316,6 @@ module.exports = {
 	shape,
 	union,
 	arguments: args,
+	validate,
 	check
 };
