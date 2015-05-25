@@ -23,7 +23,7 @@ function T(...args) {
 		const errors = assert.validate(val, asserter);
 		if(errors) {
 			const message = [].concat(errors).join('\n');
-			throw new TypeError(`${ordinals[i/2]} variable: ${message}`);
+			throw new TypeError(`${ordinals[i/2]} object: ${message}`);
 		}
 	}
 }

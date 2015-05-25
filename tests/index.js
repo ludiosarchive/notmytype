@@ -22,13 +22,13 @@ describe('T()', function() {
 	it('throws error if given wrong type', function() {
 		assert.throws(function() {
 			T(new Buffer("hi"), T.string);
-		}, /First variable: Expected.*string.*got/);
+		}, /First object: Expected.*string.*got/);
 	});
 
 	it('throws error if given wrong type in second position', function() {
 		assert.throws(function() {
 			T(3, T.number, new Buffer("hi"), T.string);
-		}, /Second variable: Expected.*string.*got/);
+		}, /Second object: Expected.*string.*got/);
 	});
 
 	it("doesn't throw if given correct types", function() {
