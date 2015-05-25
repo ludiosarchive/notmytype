@@ -1,6 +1,8 @@
 /**
  * Copied from https://github.com/gcanti/flowcheck/blob/d442fd50ae46df620e1391d57b574eda73384626/src/assert.js
- * Types were changed to superfn comment style
+ * Types were commented out for syntax compatibility with ES6
+ * Code formatting was tweaked
+ * `validate` was exported
  */
 
 "use strong";
