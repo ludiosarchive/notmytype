@@ -28,13 +28,13 @@ Examples
 
 notmytype requires io.js 2.0.0+ running with `--harmony_rest_parameters`.
 
-```
+```js
 const T = require('notmytype');
 ```
 
 All of these examples type-check without error:
 
-```
+```js
 T(3, T.number);
 T(3, T.number, "hello", T.string);
 T(3, T.number, true, T.boolean);
