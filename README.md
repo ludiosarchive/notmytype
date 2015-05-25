@@ -50,14 +50,14 @@ T({"hello": 3}, T.dict(T.string, T.number))
 T(undefined, T.void)
 ```
 
-Passing an incorrect type will raise `TypeError`:
+`T()` raises `TypeError` if given an object of the wrong type:
 
 ```
 > T([3, "s"], T.list(T.number))
 TypeError: First variable: Expected an instance of number; got "s", context: Array<number> / 1
 ```
 
-See [assert.js](https://github.com/ludios/notmytype/blob/master/assert.js) and [test/assert.js](https://github.com/ludios/notmytype/blob/master/tests/assert.js) for more details.
+See [assert.js](https://github.com/ludios/notmytype/blob/master/assert.js) and [test/assert.js](https://github.com/ludios/notmytype/blob/master/tests/assert.js) for details.
 
 
 [npm-image]: https://img.shields.io/npm/v/notmytype.svg
