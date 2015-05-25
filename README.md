@@ -26,7 +26,7 @@ npm install ludios/notmytype --save
 Examples
 ---
 
-notmytype requires io.js 2.0.0+ running with `--harmony_rest_parameters`.
+notmytype requires io.js 2.0.0+ running with `--harmony-rest-parameters`.
 
 ```js
 const T = require('notmytype');
