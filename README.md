@@ -54,7 +54,7 @@ T(undefined, T.void)
 
 ```
 > T([3, "s"], T.list(T.number))
-TypeError: First variable: Expected an instance of number; got "s", context: Array<number> / 1
+TypeError: First object: Expected an instance of number; got "s", context: Array<number> / 1
 ```
 
 See [assert.js](https://github.com/ludios/notmytype/blob/master/assert.js) and [test/assert.js](https://github.com/ludios/notmytype/blob/master/tests/assert.js) for details.
