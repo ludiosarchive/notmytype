@@ -45,9 +45,11 @@ T(3, T.optional(T.number));
 T(null, T.maybe(T.number));
 T(3, T.maybe(T.number));
 T(new Buffer("hi"), Buffer);
-T([3, "hi"], T.tuple([T.number, T.string]))
-T({"hello": 3}, T.dict(T.string, T.number))
-T(undefined, T.void)
+T([3, "hi"], T.tuple([T.number, T.string]));
+T({"hello": 3}, T.dict(T.string, T.number));
+T(undefined, T.void);
+T({"hello": 3}, T.shape({"hello": T.number}));
+T({"hello": 3, "extra": "s"}, T.shape({"hello": T.number}));
 ```
 
 `T()` raises `TypeError` if given an object of the wrong type:
