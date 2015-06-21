@@ -1,4 +1,5 @@
 /build
-/.*
 /*.tgz
-/.eslint*
+/.npmignore
+/.gitignore
+/.travis.yml
