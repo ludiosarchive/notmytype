@@ -1,6 +1,6 @@
 {
   "name": "notmytype",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "description": "Type-check your function inputs with syntax like T(s, T.string, buf, Buffer, strings, T.list(T.string))",
   "homepage": "https://github.com/ludios/notmytype",
   "issues": "https://github.com/ludios/notmytype/issues",
@@ -18,7 +18,7 @@
     "test-strong-mode": "iojs --harmony-rest-parameters --strong_mode ./node_modules/.bin/_mocha tests/*.js"
   },
   "devDependencies": {
-    "eslint": "^0.21.2",
+    "eslint": "^0.23.0",
     "mocha": "^2.2.5"
   },
   "author": "Ivan Kozik",

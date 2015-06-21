@@ -50,6 +50,7 @@ T({"hello": 3}, T.dict(T.string, T.number));
 T(undefined, T.void);
 T({"hello": 3}, T.shape({"hello": T.number}));
 T({"hello": 3, "extra": "s"}, T.shape({"hello": T.number}));
+T(Symbol('a'), T.symbol);
 ```
 
 `T()` raises `TypeError` if given an object of the wrong type:
