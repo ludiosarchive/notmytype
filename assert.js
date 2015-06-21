@@ -81,6 +81,8 @@ const Obj = define('object', function(x) { return x !== null && x !== undefined 
 
 const Func = define('function', function(x) { return typeof x === 'function'; });
 
+const Sym = define('function', function(x) { return typeof x === 'symbol'; });
+
 function validate(x/*: any*/, type/*: any*/, ctx/*?: ?ValidationContext*/, failOnFirstError/*?: boolean*/) {
 	if(type.validate) {
 		return type.validate(x, ctx, failOnFirstError);
@@ -310,6 +312,7 @@ module.exports = {
 	'boolean': Bool,
 	object: Obj,
 	'function': Func,
+	symbol: Sym,
 	list,
 	optional,
 	maybe,

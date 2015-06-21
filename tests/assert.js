@@ -62,6 +62,22 @@ describe('Failure.stringify', function() {
 	});
 });
 
+describe('symbol', function() {
+	it('is() should return false if x is not a symbol', function() {
+		assert.strictEqual(
+			f.symbol.is('Symbol(a)'),
+			false
+		);
+	});
+
+	it('is() should return true if x is a symbol', function() {
+		assert.strictEqual(
+			f.symbol.is(Symbol('a')),
+			true
+		);
+	});
+});
+
 describe('number', function() {
 	it('is() should return false if x is not a number', function() {
 		assert.strictEqual(

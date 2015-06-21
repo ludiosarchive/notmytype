@@ -46,6 +46,7 @@ T.string = assert.string;
 T.boolean = assert.boolean;
 T.object = assert.object;
 T.function = assert.function;
+T.symbol = assert.symbol;
 T.list = assert.list;
 T.optional = assert.optional;
 T.maybe = assert.maybe;
