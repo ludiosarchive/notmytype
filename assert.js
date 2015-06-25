@@ -236,11 +236,13 @@ function shape(props/*: {[key: string]: Type;}*/, name/*?: string*/)/*: Type*/ {
 function union(types/*: Array<Type>*/, name/*?: string*/)/*: Type*/ {
 	name = name || types.map(getName).join(' | ');
 	const type = new Type(name, function(x, ctx) {
-		if(types.some(function(type) { return type.is(x); })) {
+		ctx = (ctx || []).concat(name);
+		if(types.some(function(type) {
+			return validate(x, type, ctx, true) === null;
+		})) {
 			return null;
 		}
-		ctx = ctx || [];
-		return [new Failure(x, type, ctx.concat(name))];
+		return [new Failure(x, type, ctx)];
 	});
 	return type;
 }

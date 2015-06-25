@@ -144,9 +144,16 @@ describe('list()', function() {
 		);
 	});
 
-	it('should succeed if x is a list of T', function() {
+	it('should succeed if x is a list of numbers', function() {
 		assert.strictEqual(
 			f.list(f.number).validate([1, 2]),
+			null
+		);
+	});
+
+	it('should succeed if x is a list of Dates', function() {
+		assert.strictEqual(
+			f.list(Date).validate([new Date(), new Date()]),
 			null
 		);
 	});
@@ -204,9 +211,16 @@ describe('maybe()', function() {
 		);
 	});
 
-	it('should succeed if x is an instance of T', function() {
+	it('should succeed if x is a number', function() {
 		assert.strictEqual(
 			f.maybe(f.number).validate(1),
+			null
+		);
+	});
+
+	it('should succeed if x is an instance of Date', function() {
+		assert.strictEqual(
+			f.maybe(Date).validate(new Date()),
 			null
 		);
 	});
@@ -248,7 +262,7 @@ describe('tuple()', function() {
 		);
 	});
 
-	it('should succeed if x is an instance of T', function() {
+	it('should succeed if x is a tuple of string and number', function() {
 		assert.strictEqual(
 			f.tuple([f.string, f.number]).validate(['s', 1]),
 			null
@@ -378,13 +392,19 @@ describe('union()', function() {
 		);
 	});
 
-	it('should succeed if x is an instance of T', function() {
+	it('should succeed if x is an instance of string or number', function() {
 		assert.strictEqual(
 			f.union([f.string, f.number]).validate(1),
 			null
 		);
 	});
 
+	it('should succeed if x is an instance of string or Date', function() {
+		assert.strictEqual(
+			f.union([f.string, Date]).validate(new Date()),
+			null
+		);
+	});
 });
 
 describe('arguments()', function() {

@@ -1,6 +1,6 @@
 {
   "name": "notmytype",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Type-check your function inputs with syntax like T(s, T.string, buf, Buffer, strings, T.list(T.string))",
   "homepage": "https://github.com/ludios/notmytype",
   "issues": "https://github.com/ludios/notmytype/issues",

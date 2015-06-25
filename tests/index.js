@@ -54,5 +54,6 @@ describe('T()', function() {
 	it("doesn't throw if given correct types", function() {
 		assert.strictEqual(undefined, T(3, T.number));
 		assert.strictEqual(T(3, T.number, [new Buffer("hi")], T.list(Buffer)));
+		assert.strictEqual(T([new Buffer("hi"), new Date()], T.list(T.union([Buffer, Date]))));
 	});
 });
