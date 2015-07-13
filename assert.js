@@ -28,7 +28,7 @@ class Failure {
 	toString()/*: string*/ {
 		let ctx = this.ctx ? this.ctx.join(' / ') : '';
 		ctx = ctx ? `, context: ${ctx}` : ', (no context)';
-		return `Expected an instance of ${this.expected.name}; got ${Failure.stringify(this.actual) + ctx}`;
+		return `Expected an instance of ${this.expected.name}; got ${String(Failure.stringify(this.actual)) + ctx}`;
 	}
 
 	static stringify(x/*: any*/)/*: string*/ {
@@ -57,7 +57,8 @@ class Type {
 }
 
 function define(name/*: string*/, is/*: Predicate*/)/*: Type*/ {
-	const type = new Type(name, function(x, ctx) {
+	let type;
+	type = new Type(name, function(x, ctx) {
 		return is(x) ? null : [new Failure(x, type, ctx)];
 	});
 	return type;
@@ -146,7 +147,8 @@ function getName(type/*: Type*/)/*: string*/ {
 function tuple(types/*: Array<Type>*/, name/*?: string*/)/*: Type*/ {
 	name = name || `[${types.map(getName).join(', ')}]`;
 	const dimension = types.length;
-	const type = new Type(name, function (x, ctx, failOnFirstError) {
+	let type;
+	type = new Type(name, function (x, ctx, failOnFirstError) {
 		ctx = ctx || [];
 		// if x is not an array, fail fast
 		if(!Arr.is(x)) { return [new Failure(x, Arr, ctx.concat(name))]; }
@@ -235,7 +237,8 @@ function shape(props/*: {[key: string]: Type;}*/, name/*?: string*/)/*: Type*/ {
 
 function union(types/*: Array<Type>*/, name/*?: string*/)/*: Type*/ {
 	name = name || types.map(getName).join(' | ');
-	const type = new Type(name, function(x, ctx) {
+	let type;
+	type = new Type(name, function(x, ctx) {
 		ctx = (ctx || []).concat(name);
 		if(types.some(function(type) {
 			return validate(x, type, ctx, true) === null;

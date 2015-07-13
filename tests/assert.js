@@ -88,7 +88,7 @@ describe('number', function() {
 
 	it('validate() should fail if x is not a number', function() {
 		assert.strictEqual(
-			f.number.validate('a') + '',
+			String(f.number.validate('a')),
 			'Expected an instance of number; got "a", (no context)'
 		);
 	});
@@ -132,14 +132,14 @@ describe('list()', function() {
 
 	it('should fail if x is not an array', function() {
 		assert.strictEqual(
-			f.list(f.number).validate(1) + '',
+			String(f.list(f.number).validate(1)),
 			'Expected an instance of array; got 1, context: Array<number>'
 		);
 	});
 
 	it('should fail if an element of x is not an instance of T', function() {
 		assert.strictEqual(
-			f.list(f.number).validate([1, 's']) + '',
+			String(f.list(f.number).validate([1, 's'])),
 			'Expected an instance of number; got "s", context: Array<number> / 1'
 		);
 	});
@@ -162,7 +162,7 @@ describe('list()', function() {
 describe('optional()', function() {
 	it('should fail if x is not an instance of T', function() {
 		assert.strictEqual(
-			f.optional(f.number).validate('s') + '',
+			String(f.optional(f.number).validate('s')),
 			'Expected an instance of number; got "s", context: number?'
 		);
 	});
@@ -192,7 +192,7 @@ describe('maybe()', function() {
 
 	it('should fail if x is not an instance of T', function() {
 		assert.strictEqual(
-			f.maybe(f.number).validate('s') + '',
+			String(f.maybe(f.number).validate('s')),
 			'Expected an instance of number; got "s", context: ?number'
 		);
 	});
@@ -206,7 +206,7 @@ describe('maybe()', function() {
 
 	it('should fail if x is undefined', function() {
 		assert.strictEqual(
-			f.maybe(f.number).validate(undefined) + '',
+			String(f.maybe(f.number).validate(undefined)),
 			'Expected an instance of number; got undefined, context: ?number'
 		);
 	});
@@ -243,21 +243,21 @@ describe('tuple()', function() {
 
 	it('should fail if x is not an array', function() {
 		assert.strictEqual(
-			f.tuple([f.string, f.number]).validate(1) + '',
+			String(f.tuple([f.string, f.number]).validate(1)),
 			'Expected an instance of array; got 1, context: [string, number]'
 		);
 	});
 
 	it('should fail if x is an array with wrong length', function() {
 		assert.strictEqual(
-			f.tuple([f.string, f.number]).validate(['s']) + '',
+			String(f.tuple([f.string, f.number]).validate(['s'])),
 			'Expected an instance of [string, number]; got [\n  "s"\n], (no context)'
 		);
 	});
 
 	it('should fail if the i-th coordinate of x is not an instance of T[i]', function() {
 		assert.strictEqual(
-			f.tuple([f.string, f.number]).validate([1, 2]) + '',
+			String(f.tuple([f.string, f.number]).validate([1, 2])),
 			'Expected an instance of string; got 1, context: [string, number] / 0'
 		);
 	});
@@ -287,7 +287,7 @@ describe('dict()', function() {
 
 	it('should fail if x is not an object', function() {
 		assert.strictEqual(
-			f.dict(f.string, f.number).validate(1) + '',
+			String(f.dict(f.string, f.number).validate(1)),
 			'Expected an instance of object; got 1, context: {[key: string]: number}'
 		);
 	});
@@ -296,7 +296,7 @@ describe('dict()', function() {
 	/* FIXME
 	it('should fail if a key of x is not an instance of domain', function() {
 		assert.strictEqual(
-			f.dict(f.string, f.number).validate({}) + '',
+			String(f.dict(f.string, f.number).validate({})),
 			''
 		);
 	});
@@ -304,7 +304,7 @@ describe('dict()', function() {
 
 	it('should fail if a value of x is not an instance of codomain', function() {
 		assert.strictEqual(
-			f.dict(f.string, f.number).validate({a: 's'}) + '',
+			String(f.dict(f.string, f.number).validate({a: 's'})),
 			'Expected an instance of number; got "s", context: {[key: string]: number} / a'
 		);
 	});
@@ -335,21 +335,21 @@ describe('shape()', function() {
 
 	it('should fail if x is not an object', function() {
 		assert.strictEqual(
-			f.shape({a: f.number, b: f.string}).validate(1) + '',
+			String(f.shape({a: f.number, b: f.string}).validate(1)),
 			'Expected an instance of object; got 1, context: {a: number; b: string;}'
 		);
 	});
 
 	it('should fail if a key k of x is not an instance of T[k]', function() {
 		assert.strictEqual(
-			f.shape({a: f.number, b: f.string}).validate({a: 1, b: 2}) + '',
+			String(f.shape({a: f.number, b: f.string}).validate({a: 1, b: 2})),
 			'Expected an instance of string; got 2, context: {a: number; b: string;} / b'
 		);
 	});
 
 	it('should fail if a key is not specified', function() {
 		assert.strictEqual(
-			f.shape({a: f.maybe(f.number)}).validate({}) + '',
+			String(f.shape({a: f.maybe(f.number)}).validate({})),
 			'Expected an instance of number; got undefined, context: {a: ?number;} / a / ?number'
 		);
 	});
@@ -387,7 +387,7 @@ describe('union()', function() {
 
 	it('should fail if x is not an instance of T', function() {
 		assert.strictEqual(
-			f.union([f.string, f.number]).validate(false) + '',
+			String(f.union([f.string, f.number]).validate(false)),
 			'Expected an instance of string | number; got false, context: string | number'
 		);
 	});
@@ -425,17 +425,17 @@ describe('arguments()', function() {
 	it('should fail if x is not an instance of the arguments tuple', function() {
 
 		assert.strictEqual(
-			f.arguments([f.string, f.number]).validate(1) + '',
+			String(f.arguments([f.string, f.number]).validate(1)),
 			'Expected an instance of array; got 1, context: arguments / [string, number]'
 		);
 
 		assert.strictEqual(
-			f.arguments([f.string, f.number]).validate([]) + '',
+			String(f.arguments([f.string, f.number]).validate([])),
 			'Expected an instance of string; got undefined, context: arguments / [string, number] / 0,Expected an instance of number; got undefined, context: arguments / [string, number] / 1'
 		);
 
 		assert.strictEqual(
-			f.arguments([f.string, f.number]).validate(['a']) + '',
+			String(f.arguments([f.string, f.number]).validate(['a'])),
 			'Expected an instance of number; got undefined, context: arguments / [string, number] / 1'
 		);
 	});
@@ -464,7 +464,7 @@ describe('arguments()', function() {
 
 	it('should fail if x is not an instance of the varargs list', function() {
 		assert.strictEqual(
-			f.arguments([], f.string).validate([1]) + '',
+			String(f.arguments([], f.string).validate([1])),
 			'Expected an instance of string; got 1, context: varargs / Array<string> / 0'
 		);
 	});
