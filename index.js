@@ -1,3 +1,4 @@
+// Can't "use strong" because we set properties on function T
 "use strict";
 
 const assert = require('./assert');

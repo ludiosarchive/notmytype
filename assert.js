@@ -5,7 +5,7 @@
  * `validate` was exported
  */
 
-"use strong";
+// TODO: "use strong"; after V8 has ES6 default parameters
 "use strict";
 
 /*
