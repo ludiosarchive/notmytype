@@ -11,57 +11,6 @@
 const assert = require('assert');
 const f = require('../assert');
 
-describe('Failure.stringify', function() {
-	it('should stringify numbers', function() {
-		assert.strictEqual(
-			f.Failure.stringify(1),
-			'1'
-		);
-	});
-
-	it('should stringify strings', function() {
-		assert.strictEqual(
-			f.Failure.stringify('a'),
-			'"a"'
-		);
-	});
-
-	it('should stringify booleans', function() {
-		assert.strictEqual(
-			f.Failure.stringify(true),
-			'true'
-		);
-	});
-
-	it('should stringify objects', function() {
-		assert.strictEqual(
-			f.Failure.stringify({a: 1}),
-			'{\n  "a": 1\n}'
-		);
-	});
-
-	it('should stringify arrays', function() {
-		assert.strictEqual(
-			f.Failure.stringify([1, 2, 3]),
-			'[\n  1,\n  2,\n  3\n]'
-		);
-	});
-
-	it('should stringify functions', function() {
-		assert.strictEqual(
-			f.Failure.stringify(Date),
-			'"[Date, Function]"'
-		);
-	});
-
-	it('should stringify regexps', function() {
-		assert.strictEqual(
-			f.Failure.stringify(/^a/),
-			'"[/^a/, RegExp]"'
-		);
-	});
-});
-
 describe('symbol', function() {
 	it('is() should return false if x is not a symbol', function() {
 		assert.strictEqual(
@@ -89,7 +38,7 @@ describe('number', function() {
 	it('validate() should fail if x is not a number', function() {
 		assert.strictEqual(
 			String(f.number.validate('a')),
-			'Expected an instance of number; got "a", (no context)'
+			"Expected an instance of number; got 'a', (no context)"
 		);
 	});
 
@@ -140,7 +89,7 @@ describe('list()', function() {
 	it('should fail if an element of x is not an instance of T', function() {
 		assert.strictEqual(
 			String(f.list(f.number).validate([1, 's'])),
-			'Expected an instance of number; got "s", context: Array<number> / 1'
+			"Expected an instance of number; got 's', context: Array<number> / 1"
 		);
 	});
 
@@ -163,7 +112,7 @@ describe('optional()', function() {
 	it('should fail if x is not an instance of T', function() {
 		assert.strictEqual(
 			String(f.optional(f.number).validate('s')),
-			'Expected an instance of number; got "s", context: number?'
+			"Expected an instance of number; got 's', context: number?"
 		);
 	});
 
@@ -193,7 +142,7 @@ describe('maybe()', function() {
 	it('should fail if x is not an instance of T', function() {
 		assert.strictEqual(
 			String(f.maybe(f.number).validate('s')),
-			'Expected an instance of number; got "s", context: ?number'
+			"Expected an instance of number; got 's', context: ?number"
 		);
 	});
 
@@ -251,7 +200,7 @@ describe('tuple()', function() {
 	it('should fail if x is an array with wrong length', function() {
 		assert.strictEqual(
 			String(f.tuple([f.string, f.number]).validate(['s'])),
-			'Expected an instance of [string, number]; got [\n  "s"\n], (no context)'
+			"Expected an instance of [string, number]; got [ 's' ], (no context)"
 		);
 	});
 
@@ -305,7 +254,7 @@ describe('dict()', function() {
 	it('should fail if a value of x is not an instance of codomain', function() {
 		assert.strictEqual(
 			String(f.dict(f.string, f.number).validate({a: 's'})),
-			'Expected an instance of number; got "s", context: {[key: string]: number} / a'
+			"Expected an instance of number; got 's', context: {[key: string]: number} / a"
 		);
 	});
 

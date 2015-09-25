@@ -14,6 +14,8 @@ type ValidationFunction = (x: any, ctx?: ?ValidationContext, failOnFirstError?: 
 type Predicate = (x: any) => boolean;
 */
 
+const inspect = require('util').inspect;
+
 function getFunctionName (f/*: any*/)/*: string*/ {
 	return f.displayName || f.name || `<function${f.length}>`;
 }
@@ -27,20 +29,8 @@ class Failure {
 
 	toString()/*: string*/ {
 		let ctx = this.ctx ? this.ctx.join(' / ') : '';
-		ctx = ctx ? `, context: ${ctx}` : ', (no context)';
-		return `Expected an instance of ${this.expected.name}; got ${String(Failure.stringify(this.actual)) + ctx}`;
-	}
-
-	static stringify(x/*: any*/)/*: string*/ {
-		try { // handle circular references
-			return JSON.stringify(x, function(k, v) {
-				if(typeof v === 'function') { return `[${getFunctionName(v)}, Function]`; } // handle functions
-				if(v instanceof RegExp) { return `[${String(v)}, RegExp]`; } // handle regexps
-				return v;
-			}, 2);
-		} catch (e) {
-			return String(x);
-		}
+		ctx = ctx ? `context: ${ctx}` : '(no context)';
+		return `Expected an instance of ${this.expected.name}; got ${inspect(this.actual)}, ${ctx}`;
 	}
 }
 
